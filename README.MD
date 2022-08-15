@@ -6,7 +6,7 @@ A simple Rust program to download all of the **15,000** pokemon images on [pkmnc
     <img src="./pokemon.png" />
 </p>
 
-There is about **252** page on website at the time of creating of this PR every page has about **60** image. the output of the program should be in a folder called `output` which should include the all the pages represented as directories and every directoy has the 60 image.
+There is about **252** pages on website at the time of creating of this PR every page has about **60** image. the output of the program should be in a folder called `output` which should include the all the pages represented as directories and every directoy has the 60 image.
 
 ```bash
 --ouptut
