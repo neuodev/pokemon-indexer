@@ -135,4 +135,4 @@ response
 
 ## Example website
 
-<video src="./example.mp4" atuoplay />
+[![Watch the video](./sample.png)](./example.mp4)
