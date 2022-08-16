@@ -9,12 +9,12 @@ A simple Rust program to download all of the **15,000** pokemon images on [pkmnc
 There is about **252** pages on website at the time of creating of this PR every page has about **60** image. the output of the program should be in a folder called `output` which should include the all the pages represented as directories and every directoy has the 60 images.
 
 ```bash
---ouptut
+--output
   |
   ------- page (idx 1..=252)
             |
             -----image (idx 1..=60).png
-
+  ...... other 251 directories
 ```
 
 # How it works?
