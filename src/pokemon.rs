@@ -75,11 +75,12 @@ async fn save_urls(urls: Vec<String>) {
         .expect("Failed to write to the ouptut json file");
 }
 
-pub async fn pokemon_download<'a>(args: &'a crate::Args) {
+pub async fn pokemon_download(args: &crate::Args) {
     let total_iters = NUM_OF_PAGES / args.pages;
     println!("Total iterations: {}", total_iters);
 
     let mut all_urls = vec![];
+    let should_save_images = args.save_images;
 
     for i in 1..=total_iters {
         let offset = ((i - 1) * args.pages) + 1;
@@ -91,7 +92,7 @@ pub async fn pokemon_download<'a>(args: &'a crate::Args) {
                     Ok(result) => {
                         println!("[page]: {}", format!("{}", page).bold().underline().cyan());
                         let urls = extract_img_urls(result.as_str());
-                        if args.save_images == true {
+                        if should_save_images == true {
                             save_page_images(urls.clone(), page).await;
                         }
                         println!("[done]: {}", format!("{}", page).bold().underline().green());
