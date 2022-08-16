@@ -4,8 +4,9 @@ use select::predicate::Class;
 use tokio::fs::{self, File};
 use tokio::io::{self, AsyncWriteExt};
 
-const NUM_OF_PAGES: u8 = 252;
+const NUM_OF_PAGES: u8 = 10; // 252
 const OUTPUT_JSON_FILE: &str = "./ouptut/urls.json";
+const OUTPUT_DIR: &str = "./output";
 
 /// Fetch the HTML per page
 /// There is about 252 page on this website https://pkmncards.com/page/1/?s with over more than 15,000 image
@@ -66,6 +67,10 @@ pub async fn save_page_images(urls: Vec<String>, page: u8) {
 
 // Save all urls for all 15,000 images into a json
 async fn save_urls(urls: Vec<String>) {
+    // Create the output dir if is not exsit
+    fs::create_dir(OUTPUT_DIR)
+        .await
+        .expect("Failed to create the output dir.");
     let mut file = File::create(OUTPUT_JSON_FILE)
         .await
         .expect("Unable to create output json file");

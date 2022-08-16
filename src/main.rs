@@ -1,4 +1,5 @@
 mod pokemon;
+use actix_web::{get, web, App, HttpRequest, HttpResponse, HttpServer, Responder};
 use clap::Parser;
 use pokemon::pokemon_download;
 
@@ -12,13 +13,26 @@ pub struct Args {
     json: bool,
     #[clap(short, long, value_parser, default_value_t = false)]
     save_images: bool,
+    #[clap(long, value_parser, default_value = "127.0.0.1:8080")]
+    addr: String,
 }
 
 #[tokio::main]
-async fn main() -> Result<(), reqwest::Error> {
+async fn main() -> std::io::Result<()> {
     let args = Args::parse();
     println!("App settings: {:#?}", args);
     pokemon_download(&args).await;
 
+    println!("Server running on {}", args.addr);
+    HttpServer::new(|| App::new().service(web::scope("/api/v1").service(index)))
+        .bind(args.addr)?
+        .run()
+        .await?;
+
     Ok(())
+}
+
+#[get("/pokemon")]
+async fn index() -> impl Responder {
+    "hello, world"
 }
