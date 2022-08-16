@@ -4,6 +4,8 @@ use actix_web::{get, web, App, HttpResponse, HttpServer, Responder};
 use clap::Parser;
 use pokemon::{load_urls_in_memory, pokemon_download};
 use serde::{Deserialize, Serialize};
+use actix_files as fs;
+use actix_files::NamedFile;
 
 #[derive(Parser, Debug)]
 #[clap(allow_negative_numbers = false)]
@@ -36,7 +38,9 @@ async fn main() -> std::io::Result<()> {
         App::new()
             .wrap(cors)
             .app_data(web::Data::new(urls.clone()))
-            .service(web::scope("/api/v1").service(index))
+            .service(fs::Files::new("/static", "./static").show_files_listing())
+            .service(index)
+            .service(web::scope("/api/v1").service(get_pokemons))
     })
     .bind(args.addr)?
     .run()
@@ -59,7 +63,7 @@ struct PokemonQuery {
 }
 
 #[get("/pokemon")]
-async fn index(query: web::Query<PokemonQuery>, urls: web::Data<Vec<String>>) -> impl Responder {
+async fn get_pokemons(query: web::Query<PokemonQuery>, urls: web::Data<Vec<String>>) -> impl Responder {
     let page = query.page.unwrap_or_else(|| 1);
     let page_size = query.page_size.unwrap_or_else(|| 10);
     let skip = (page - 1) * page_size;
@@ -79,4 +83,9 @@ async fn index(query: web::Query<PokemonQuery>, urls: web::Data<Vec<String>>) ->
 
     let json = serde_json::to_string_pretty(&resp).unwrap();
     HttpResponse::Ok().body(json)
+}
+
+#[get("/")]
+async fn index() -> actix_web::Result<NamedFile> {
+    Ok(NamedFile::open("./static/index.html")?)
 }
