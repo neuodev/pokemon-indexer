@@ -3,9 +3,10 @@ use select::document::Document;
 use select::predicate::Class;
 use tokio::fs::{self, File};
 use tokio::io::{self, AsyncWriteExt};
+use std::path::Path;
 
-const NUM_OF_PAGES: u8 = 10; // 252
-const OUTPUT_JSON_FILE: &str = "./ouptut/urls.json";
+const NUM_OF_PAGES: u8 = 252;
+const OUTPUT_JSON_FILE: &str = "./output/urls.json";
 const OUTPUT_DIR: &str = "./output";
 
 /// Fetch the HTML per page
@@ -68,14 +69,18 @@ pub async fn save_page_images(urls: Vec<String>, page: u8) {
 // Save all urls for all 15,000 images into a json
 async fn save_urls(urls: Vec<String>) {
     // Create the output dir if is not exsit
-    fs::create_dir(OUTPUT_DIR)
+    let path = Path::new(OUTPUT_DIR);
+    if !path.exists() {
+        fs::create_dir(OUTPUT_DIR)
         .await
         .expect("Failed to create the output dir.");
+    }
+
     let mut file = File::create(OUTPUT_JSON_FILE)
         .await
         .expect("Unable to create output json file");
     let json = serde_json::to_string(&urls).expect("Invalid json");
-    file.write(json.as_bytes())
+    file.write_all(json.as_bytes())
         .await
         .expect("Failed to write to the ouptut json file");
 }

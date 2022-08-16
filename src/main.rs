@@ -1,5 +1,5 @@
 mod pokemon;
-use actix_web::{get, web, App, HttpRequest, HttpResponse, HttpServer, Responder};
+use actix_web::{get, web, App, HttpResponse, HttpServer, Responder};
 use clap::Parser;
 use pokemon::pokemon_download;
 
