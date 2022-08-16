@@ -135,4 +135,4 @@ response
 
 ## Example website
 
-![Pokemon](./sample.png)
+<video src="./example.mp4" atuoplay />
