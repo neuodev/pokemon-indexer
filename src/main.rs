@@ -1,8 +1,9 @@
 mod pokemon;
+use actix_cors::Cors;
 use actix_web::{get, web, App, HttpResponse, HttpServer, Responder};
 use clap::Parser;
 use pokemon::{load_urls_in_memory, pokemon_download};
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 
 #[derive(Parser, Debug)]
 #[clap(allow_negative_numbers = false)]
@@ -31,7 +32,9 @@ async fn main() -> std::io::Result<()> {
 
     println!("Server running on {}", args.addr);
     HttpServer::new(move || {
+        let cors = Cors::default().allow_any_origin();
         App::new()
+            .wrap(cors)
             .app_data(web::Data::new(urls.clone()))
             .service(web::scope("/api/v1").service(index))
     })
@@ -67,9 +70,11 @@ async fn index(query: web::Query<PokemonQuery>, urls: web::Data<Vec<String>>) ->
         .skip(skip as usize)
         .take(page_size as usize)
         .collect::<Vec<String>>();
-    
+
     let resp = PokemonResponse {
-        urls, count, num_of_pages: count / page_size as usize
+        urls,
+        count,
+        num_of_pages: count / page_size as usize,
     };
 
     let json = serde_json::to_string_pretty(&resp).unwrap();
