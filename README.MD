@@ -20,16 +20,47 @@ There is about **252** pages on website at the time of creating of this PR every
 # How it works?
 
 I am using **tokio** to be able to spen up multiple asynchronous tasks. Due to the network limitation I am running about `5` tasks for `5` page and then another `60` tasks for each page this is about `5 * 60 = 360` image running at the same time. Becuase we have 252 page it will take about 51 iterations to download all of the images.
-All of these values can be changed by updating this values in the `main.rs` file
-
-```rs
-// Number of pages to progess at the same time
-const PAGES_TO_PROCESS: u8 = 5;
-```
 
 This process might take some time. You can consider running the program as a **backgorund process** using **[pm2](https://pm2.keymetrics.io/)**.
 
-## How to run?
+# How to run?
+
+You can pass the following arguments
+| Argument | desc| type | default | note|
+| --------- | ----| ----- | ------- | ----|
+| page (-p) | Number of pages to process at the same time | `u8` | `5` | |
+| json (-j)| Save all images urls into a json file| `bool` | `flase` | Required to be able to run the web server|
+| save-images (-s)| Save all fetched images| `bool` | `flase` | |
+| addr | server binding address| `socketAddr` | `127.0.0.1:8080` | |
+
+### examples
+
+```bash
+# Only output a json file with all of the urls
+[exe] -p 12 -j
+# Process 20 pages in parallel ans save all of the output images
+[exe] -p 20 -s
+# Run the server on a different port
+[exe] --addr 127.0.0.1:3000
+# Get all commands
+[exe] -h
+```
+
+```bash
+
+USAGE:
+    pokemon-cards.exe [OPTIONS]
+
+OPTIONS:
+        --addr <ADDR>      [default: 127.0.0.1:8080]
+    -h, --help             Print help information
+    -j, --json
+    -p, --pages <PAGES>    [default: 5]
+    -s, --save-images
+    -V, --version          Print version information
+```
+
+## Run with one of the previous arguments
 
 1. build the binary to your target platform using
 
@@ -97,7 +128,7 @@ response
   "urls": [
     /*Array of all the urls*/
   ],
-  "count": 300,
-  "num_of_pages": 25
+  "count": 14400,
+  "num_of_pages": 1200
 }
 ```
