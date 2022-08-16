@@ -132,3 +132,7 @@ response
   "num_of_pages": 1200
 }
 ```
+
+## Example website
+
+![Pokemon](./sample.png)
