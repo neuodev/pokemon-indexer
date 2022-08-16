@@ -1,9 +1,9 @@
 use colored::Colorize;
 use select::document::Document;
 use select::predicate::Class;
+use std::path::Path;
 use tokio::fs::{self, File};
 use tokio::io::{self, AsyncWriteExt};
-use std::path::Path;
 
 const NUM_OF_PAGES: u8 = 252;
 const OUTPUT_JSON_FILE: &str = "./output/urls.json";
@@ -72,8 +72,8 @@ async fn save_urls(urls: Vec<String>) {
     let path = Path::new(OUTPUT_DIR);
     if !path.exists() {
         fs::create_dir(OUTPUT_DIR)
-        .await
-        .expect("Failed to create the output dir.");
+            .await
+            .expect("Failed to create the output dir.");
     }
 
     let mut file = File::create(OUTPUT_JSON_FILE)
@@ -134,4 +134,19 @@ pub async fn pokemon_download(args: &crate::Args) {
     if args.json == true {
         save_urls(all_urls).await;
     }
+}
+
+pub async fn load_urls_in_memory() -> Vec<String> {
+    let path = Path::new(OUTPUT_JSON_FILE);
+
+    if !path.exists() {
+        panic!("{} is missing", OUTPUT_JSON_FILE);
+    }
+
+    let json_str = fs::read_to_string(path)
+        .await
+        .expect("Unable to read urls.json file");
+    let urls: Vec<String> = serde_json::from_str(&json_str).expect("Failed to parse urls");
+
+    urls
 }
