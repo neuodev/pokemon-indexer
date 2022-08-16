@@ -728,6 +728,7 @@ dependencies = [
  "colored",
  "reqwest",
  "select",
+ "serde_json",
  "tokio",
 ]
 
