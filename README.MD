@@ -74,3 +74,30 @@ This process might take some time. You can consider running the program as a **b
    ```bash
    pm2 stop|delete|restart ecosystem.config.js
    ```
+
+# API
+
+`GET /api/v1/pokemon`
+
+| Query     | type  | default | desc                |
+| --------- | ----- | ------- | ------------------- |
+| page      | `i32` | `1`     | current page nubmer |
+| page_size | `i32` | `10`    | Items perpage       |
+
+### Example
+
+```
+GET /api/v1/pokemon?page=1&page_size=20
+```
+
+response
+
+```json
+{
+  "urls": [
+    /*Array of all the urls*/
+  ],
+  "count": 300,
+  "num_of_pages": 25
+}
+```

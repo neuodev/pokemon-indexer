@@ -69,7 +69,7 @@ async fn index(query: web::Query<PokemonQuery>, urls: web::Data<Vec<String>>) ->
         .collect::<Vec<String>>();
     
     let resp = PokemonResponse {
-        urls, count, num_of_pages: page_size as usize / count
+        urls, count, num_of_pages: count / page_size as usize
     };
 
     let json = serde_json::to_string_pretty(&resp).unwrap();
