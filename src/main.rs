@@ -1,8 +1,20 @@
 mod pokemon;
 use colored::Colorize;
+use clap::Parser;
 
 const NUM_OF_PAGES: u8 = 252;
 const PAGES_TO_PROCESS: u8 = 5;
+
+#[derive(Parser, Debug)]
+#[clap(author, version, about, long_about = None)]
+struct Args {
+    #[clap(short, long, value_parser, default_value_t = 5)]
+    pages: u8,
+    #[clap(short, long, value_parser, default_value_t = false)]
+    json: bool,
+    #[clap(short, long, value_parser, default_value_t = true)]
+    save_images: bool
+}
 
 #[tokio::main]
 async fn main() -> Result<(), reqwest::Error> {

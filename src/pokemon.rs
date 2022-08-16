@@ -48,3 +48,4 @@ pub async fn save_page_images(urls: Vec<String>, page: u8) {
         h.await.unwrap();
     }
 }
+
